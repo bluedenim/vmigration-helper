@@ -12,7 +12,7 @@ setup(
     description="Van's Migration Helper",
     long_description=README,
     long_description_content_type="text/markdown",
-    # url="https://github.com/realpython/reader",
+    url="https://github.com/bluedenim/vmigration-helper",
     author="Van Ly",
     author_email="vancly@hotmail.com",
     license="MIT",

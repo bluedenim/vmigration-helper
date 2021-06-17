@@ -8,7 +8,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
     name="vmigration-helper",
-    version="1.0.0",
+    version="0.0.1",
     description="Van's Migration Helper",
     long_description=README,
     long_description_content_type="text/markdown",

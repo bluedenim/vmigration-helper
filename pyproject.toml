@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "vmigration-helper"
+version = "0.0.6"
+description = "Van's Django Migration Helper"
+authors = ["bluedenim <vancly@hotmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.0"
+
+[tool.poetry.dev-dependencies]
+twine = "^3.4.1"
+wheel = "^0.36.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

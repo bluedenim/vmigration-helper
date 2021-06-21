@@ -3,9 +3,23 @@
 Django commands to help with running Django migrations.
 
 ## Installation
-```
-pip install vmigration-helper
-```
+
+* Add the dependency to your environment:
+
+  ```
+  pip install vmigration-helper
+  ```
+
+* Add the app `vmgration_helper.apps.VMigrationHelperConfig` to your list of installed apps in your settings:
+
+  ```
+  INSTALLED_APPS = [
+    ...
+    'vmigration_helper.apps.VMigrationHelperConfig',
+    ...
+  ]
+  ```
+
 
 ## Commands
 
@@ -13,8 +27,12 @@ pip install vmigration-helper
 
 Shows existing migration records in your `django_migration` table.
 
+#### Optional parameters:
+
+  * `--format (console | csv)` print the info in CSV or friendlier console format (default)
+
 ```
-> python manage.py migration_records
+> python manage.py migration_records --format csv
 ID,Applied,App,Name
 175,2021-06-13T20:41:28.683900+00:00,contenttypes,0001_initial
 176,2021-06-13T20:41:28.717886+00:00,auth,0001_initial
@@ -46,7 +64,7 @@ Shows the ID of the latest migration record in your `django_migration` table.
 
 ### migration_rollback
 
-Roll back (unapply) previously applied migrations after the migration ID provided.
+Roll-back (unapply) previously applied migrations _after_ (but not including) the migration ID provided.
 
 ```
 > python manage.py migrateion_rollback 176

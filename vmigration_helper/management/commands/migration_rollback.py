@@ -73,9 +73,13 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            'id',
+            'to_id',
             type=int,
-            help=f'The ID of the migration record to rollback to. Use "migration_records" to see all records'
+            help=(
+                'The ID of the migration record to rollback to. '
+                'All migrations done after this ID will be rolled back. '
+                'Use "migration_records" to see all records.'
+            )
         )
 
         parser.add_argument(
@@ -95,7 +99,7 @@ class Command(BaseCommand):
         connection.prepare_database()
         recorder = MigrationRecorder(connection)
 
-        rollback_to_id = options['id']
+        rollback_to_id = options['to_id']
         dry_run = options['dry_run']
         migrate_cmd = options['migrate_cmd']
 
@@ -114,5 +118,5 @@ class Command(BaseCommand):
             command_to_run = migrate_cmd.format(app=target[0], name=target[1])
             print(command_to_run)
             if not dry_run:
-                subprocess.run(command_to_run, check=True)
+                subprocess.run(command_to_run, check=True, shell=True)
                 print()

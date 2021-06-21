@@ -8,7 +8,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
     name="vmigration-helper",
-    version="0.0.6",
+    version="0.0.8",
     description="Van's Migration Helper",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -23,5 +23,8 @@ setup(
     ],
     packages=["main", "vmigration_helper"],
     include_package_data=False,
-    install_requires=[]
+    install_requires=[
+        'wheel',
+        'twine'
+    ]
 )

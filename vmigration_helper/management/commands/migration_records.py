@@ -32,7 +32,10 @@ class Command(BaseCommand):
 
     @staticmethod
     def _find_max_app_name_width(migration_query_set: QuerySet) -> int:
-        return max(*[len(m['app']) for m in migration_query_set.values('app').distinct()])
+        widths = [len(m['app']) for m in migration_query_set.values('app').distinct()]
+        if widths:
+            return max(*widths)
+        return 0
 
     def add_arguments(self, parser):
         parser.add_argument(

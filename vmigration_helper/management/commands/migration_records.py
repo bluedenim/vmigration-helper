@@ -10,6 +10,9 @@ FORMAT_CONSOLE = 'console'
 class Command(BaseCommand):
     """
     Displays all the migration records (from the ``django_migrations`` table).
+
+    Optional parameter:
+        --format ("csv" | "console") show all the records of past migrations in CSV or human-friendly format (default)
     """
 
     @staticmethod

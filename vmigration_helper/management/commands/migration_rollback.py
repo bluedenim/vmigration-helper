@@ -23,8 +23,15 @@ class Command(BaseCommand):
 
     Optional parameters:
 
-        * dry-run -- only print the commands; don't run them
-        *
+        * --dry-run
+            only print the commands; don't run them
+        * --migrate-cmd "command template"
+            use the template provided to invoke the migrations (default is "python manage.py migrate {app} {name}")
+            the placeholders "{app}" and "{name}" indicate the app name and migration file name, respectively
+
+        For example, to see the rollback commands using pipevn (without running them):
+
+        python manage.py migration_rollback 7 --dry-run --migrate-cmd "pipenv run python manage.py migrate {app} {name}"
 
     """
 
@@ -32,7 +39,8 @@ class Command(BaseCommand):
     def squash_migrations(migrations: List[MigrationRecorder.Migration]) -> List[MigrationRecorder.Migration]:
         """
         Find contiguous migrations for the same app and squash them by omitting all but the last entry. The incoming
-        list, therefore, must be ordered such that the last entry of a contiguous group is the one to keep.
+        list, therefore, must be ordered such that the last entry of a contiguous group is the one to keep (e.g.
+        in descending order when rolling back).
 
         :param migrations: the migrations to squash
 
@@ -52,7 +60,7 @@ class Command(BaseCommand):
                     lowest_migrations.append(curr_migration)
                     curr_app = migration.app
                     curr_migration = migration
-        if curr_app:
+        if curr_migration:
             lowest_migrations.append(curr_migration)
         return lowest_migrations
 
@@ -62,7 +70,7 @@ class Command(BaseCommand):
         migration: MigrationRecorder.Migration
     ) -> Optional[MigrationRecorder.Migration]:
         """
-        Retrieve the previous migration record (based on the app) from the DB if one exists.
+        Retrieve the previous migration record (based on the app and ID) from the DB if one exists.
 
         :param migration_recorder: the MigrationRecorder instance to use to access migration records.
         :param migration: the migration to retrieve the previous migration for.

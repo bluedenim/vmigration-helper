@@ -67,7 +67,7 @@ Shows the ID of the latest migration record in your `django_migration` table.
 Roll-back (unapply) previously applied migrations _after_ (but not including) the migration ID provided.
 
 ```
-> python manage.py migrateion_rollback 176
+> python manage.py migration_rollback 176
 ```
 
 The above will rollback migrations after `0001_initial` of the `auth` app:
@@ -139,3 +139,16 @@ Running migrations:
     pipenv run python manage.py migrate auth zero
     pipenv run python manage.py migrate contenttypes zero
     ```
+
+## Ideas for automation
+
+Here's an idea for automating the deployment of your Django app using these utilities:
+
+* Deploy new code
+* Run `migration_current_id` and capture the current ID
+* Run migration normally
+* Run your automated tests normally
+* If tests pass
+* If tests fail, and you need to rollback, run
+  `migration_rollback <captured ID>`
+  

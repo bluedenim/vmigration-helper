@@ -51,7 +51,7 @@ These are the records of migrations applied. The fields indicate:
   * Name - name of the migration 
 
 
-### migration_current
+### migration_current_id
 
 Shows the ID of the latest migration record in your `django_migration` table.
 

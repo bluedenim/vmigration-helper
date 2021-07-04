@@ -2,7 +2,7 @@ import subprocess
 from typing import List, Optional
 
 from django.core.management import BaseCommand
-from django.db import DEFAULT_DB_ALIAS, connections
+from django.db import DEFAULT_DB_ALIAS, connections, OperationalError
 from django.db.migrations.recorder import MigrationRecorder
 
 
@@ -103,28 +103,31 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        connection = connections[DEFAULT_DB_ALIAS]
-        connection.prepare_database()
-        recorder = MigrationRecorder(connection)
-
         rollback_to_id = options['to_id']
         dry_run = options['dry_run']
         migrate_cmd = options['migrate_cmd']
 
-        qs = recorder.migration_qs.filter(id__gt=rollback_to_id).order_by('-id')
-        migration_records = list(qs)  # type: List[MigrationRecorder.Migration]
-        squashed_migrations = self.squash_migrations(migration_records)
-        targets = []
-        for migration in squashed_migrations:
-            previous_migration = self.previous_migration(recorder, migration)
-            if previous_migration:
-                targets.append((migration.app, previous_migration.name))
-            else:
-                targets.append((migration.app, 'zero'))
+        try:
+            connection = connections[DEFAULT_DB_ALIAS]
+            connection.prepare_database()
+            recorder = MigrationRecorder(connection)
+            qs = recorder.migration_qs.filter(id__gt=rollback_to_id).order_by('-id')
+            migration_records = list(qs)  # type: List[MigrationRecorder.Migration]
+            squashed_migrations = self.squash_migrations(migration_records)
+            targets = []
+            for migration in squashed_migrations:
+                previous_migration = self.previous_migration(recorder, migration)
+                if previous_migration:
+                    targets.append((migration.app, previous_migration.name))
+                else:
+                    targets.append((migration.app, 'zero'))
 
-        for target in targets:
-            command_to_run = migrate_cmd.format(app=target[0], name=target[1])
-            print(command_to_run)
-            if not dry_run:
-                subprocess.run(command_to_run, check=True, shell=True)
-                print()
+            for target in targets:
+                command_to_run = migrate_cmd.format(app=target[0], name=target[1])
+                print(command_to_run)
+                if not dry_run:
+                    subprocess.run(command_to_run, check=True, shell=True)
+                    print()
+        except OperationalError as e:
+            print(f'DB ERROR: {e}')
+            exit(1)

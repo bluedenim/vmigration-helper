@@ -1,5 +1,5 @@
 from django.core.management import BaseCommand
-from django.db import DEFAULT_DB_ALIAS, connections
+from django.db import DEFAULT_DB_ALIAS, connections, OperationalError
 from django.db.migrations.recorder import MigrationRecorder
 from django.db.models import QuerySet
 
@@ -30,7 +30,7 @@ class Command(BaseCommand):
     def _format_header_console(app_name_width: int) -> str:
         return (
             f"{'ID'.rjust(6, ' ')} {'Applied'.ljust(32, ' ')} "
-            f"{'App'.ljust(app_name_width, ' ')} Name"
+            f"{'App'.rjust(app_name_width, ' ')} Name"
         )
 
     @staticmethod
@@ -50,21 +50,25 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print_format = options['format']
 
-        connection = connections[DEFAULT_DB_ALIAS]
-        connection.prepare_database()
-        recorder = MigrationRecorder(connection)
-        migrations_queryset = recorder.migration_qs.all()
+        try:
+            connection = connections[DEFAULT_DB_ALIAS]
+            connection.prepare_database()
+            recorder = MigrationRecorder(connection)
+            migrations_queryset = recorder.migration_qs.all()
 
-        app_name_width = 0
-        header = "ID,Applied,App,Name"
-        if print_format == FORMAT_CONSOLE:
-            app_name_width = max(self._find_max_app_name_width(migrations_queryset), 5)
-            header = self._format_header_console(app_name_width)
+            app_name_width = 0
+            header = "ID,Applied,App,Name"
+            if print_format == FORMAT_CONSOLE:
+                app_name_width = max(self._find_max_app_name_width(migrations_queryset), 5)
+                header = self._format_header_console(app_name_width)
 
-        print(header)
-        for record in migrations_queryset:
-            if print_format == FORMAT_CSV:
-                row = self._format_csv(record)
-            else:
-                row = self._format_console(record, app_name_width)
-            print(row)
+            print(header)
+            for record in migrations_queryset:
+                if print_format == FORMAT_CSV:
+                    row = self._format_csv(record)
+                else:
+                    row = self._format_console(record, app_name_width)
+                print(row)
+        except OperationalError as e:
+            print(f'DB ERROR: {e}')
+            exit(1)

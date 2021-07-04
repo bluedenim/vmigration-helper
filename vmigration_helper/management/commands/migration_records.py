@@ -5,6 +5,7 @@ from django.db.models import QuerySet
 
 FORMAT_CSV = 'csv'
 FORMAT_CONSOLE = 'console'
+DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S%z'
 
 
 class Command(BaseCommand):
@@ -17,19 +18,21 @@ class Command(BaseCommand):
 
     @staticmethod
     def _format_csv(record: MigrationRecorder.Migration) -> str:
-        return f"{record.id},{record.applied.isoformat()},{record.app},{record.name}"
+        return f"{record.id},{record.applied.strftime(DATETIME_FORMAT)},{record.app},{record.name}"
 
     @staticmethod
     def _format_console(record: MigrationRecorder.Migration, app_name_width: int) -> str:
         return (
-            f"{str(record.id).rjust(6, ' ')} {record.applied.isoformat()} "
+            f"{str(record.id).rjust(6, ' ')} {record.applied.strftime(DATETIME_FORMAT).ljust(24, ' ')} "
             f"{record.app.rjust(app_name_width, ' ')} {record.name}"
         )
 
     @staticmethod
     def _format_header_console(app_name_width: int) -> str:
+        # alloc width 6 for IDs
+        # alloc width 24 for the date: YYYY-MM-DDTHH:MM:SSZZZZZ (DATETIME_FORMAT)
         return (
-            f"{'ID'.rjust(6, ' ')} {'Applied'.ljust(32, ' ')} "
+            f"{'ID'.rjust(6, ' ')} {'Applied'.ljust(24, ' ')} "
             f"{'App'.rjust(app_name_width, ' ')} Name"
         )
 

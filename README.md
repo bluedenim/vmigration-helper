@@ -148,7 +148,7 @@ Here's an idea for automating the deployment of your Django app using these util
 * Run `migration_current_id` and capture the current ID
 * Run migration normally
 * Run your automated tests normally
-* If tests pass
-* If tests fail, and you need to rollback, run
+  * If tests pass, you're done!
+  * If tests fail, and you need to rollback, run
   `migration_rollback <captured ID>`
   

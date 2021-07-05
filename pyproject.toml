@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vmigration-helper"
-version = "0.0.13"
+version = "0.0.15"
 homepage = "https://github.com/bluedenim/vmigration-helper"
 description = "Van's Django Migration Helper"
 authors = ["bluedenim <vancly@hotmail.com>"]
@@ -8,6 +8,8 @@ readme = "README.md"
 packages = [
     { include = "vmigration_helper" },
 ]
+exclude = ["main"]
+keywords = ["django","migration","rollback"]
 
 [tool.poetry.dependencies]
 python = "^3.0"

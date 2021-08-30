@@ -1,0 +1,30 @@
+version: "3.9"
+
+# To build image and initialize container for subsequent tasks:
+#   docker-compose build
+#   docker-compose run --rm buildenv /bin/bash
+#   poetry install
+#   poetry run python manage.py migrate
+
+
+# To access shell:
+#   docker-compose run --rm buildenv /bin/bash
+
+# To build:
+#   docker-compose run --rm buildenv /bin/bash
+#   poetry build
+
+# To Publish (test pypi):
+#   docker-compose run --rm buildenv /bin/bash
+#   poetry config repositories.testpypi https://test.pypi.org/legacy/
+#   poetry publish -r testpypi
+
+# To Publish:
+#   docker-compose run --rm buildenv /bin/bash
+#   poetry publish
+
+services:
+  buildenv:
+    build: .
+    volumes:
+      - .:/code

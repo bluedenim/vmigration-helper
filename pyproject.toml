@@ -12,7 +12,8 @@ exclude = ["main"]
 keywords = ["django","migration","rollback"]
 
 [tool.poetry.dependencies]
-python = "^3.0"
+python = ">=3.6,<4.0"
+Django = "^3.2.6"
 
 [tool.poetry.dev-dependencies]
 twine = "^3.4.1"

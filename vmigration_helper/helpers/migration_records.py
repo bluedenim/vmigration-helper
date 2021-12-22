@@ -42,13 +42,13 @@ class MigrationRecordsHelper:
             app=migration.app, id__lt=migration.id
         ).order_by('-id').first()
 
-    def delete_migration(self, migration_record_id: int) -> bool:
+    def delete_migration(self, app: str, name: str) -> bool:
         """
-        Delete the migration whose ID is given.
+        Delete the migration matching the app and name given.
 
         :returns: True if a record was deleted
         """
-        deleted, _ = self.migration_recorder.migration_qs.filter(id=migration_record_id).delete()
+        deleted, _ = self.migration_recorder.migration_qs.filter(app=app, name=name).delete()
         return deleted
 
     @staticmethod

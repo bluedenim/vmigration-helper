@@ -140,6 +140,34 @@ Running migrations:
     pipenv run python manage.py migrate contenttypes zero
     ```
 
+### migration_delete
+
+Deletes an entry from Django's migration records. This command should be
+used only as a last resort to fix up migration records that cannot be rolled back. No migration up/down is performed; 
+the record is simply removed from `django_migrations`.
+
+NOTE also that migrations that depend on the record being deleted will be "broken" after the deletion, so this 
+command should only be run on "leaf" migration records unless you plan to also delete other migration records that
+depend on the one being deleted.
+
+```
+python manage.py migration_delete myapp 0003_some_migration
+Confirm deletion of auth:0009_alter_user_last_name_max_length (yes or no): yes
+```
+The command above deletes the migration `0003_some_migration` for the app `myapp` (after
+getting confirmation).
+
+To delete without confirmation, use the `--yes` option:
+```
+python manage.py migration_delete myapp 0003_some_migration --yes
+```
+
+
+#### Optional parameters:
+
+  * `--yes` will proceed to deleting the record without asking for confirmation
+
+
 ## Ideas for automation
 
 Here's an idea for automating the deployment of your Django app using these utilities:

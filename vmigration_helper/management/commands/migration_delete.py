@@ -15,21 +15,45 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            'id',
-            type=int,
+            'app',
             help=(
-                'The ID of the migration record to delete.'
+                'The application name of the migration record to delete.'
+            )
+        )
+        parser.add_argument(
+            'name',
+            help=(
+                'The migration name of the migration record to delete.'
+            )
+        )
+        parser.add_argument(
+            '--yes',
+            action='store_true',
+            help=(
+                'Runs the operation without confirmation.'
             )
         )
 
     def handle(self, *args, **options):
-        id_to_delete = options['id']
+        app = options['app']
+        name = options['name']
+        yes = options['yes']
 
-        if id_to_delete:
+        if app and name:
             connection = connections[DEFAULT_DB_ALIAS]
             connection.prepare_database()
             helper = MigrationRecordsHelper(MigrationRecorder(connection))
 
-            deleted = helper.delete_migration(id_to_delete)
+            if not yes:
+                record = helper.get_migration_records_qs().filter(app=app, name=name)
+                if record.exists():
+                    if 'yes' == input(f'Confirm deletion of {app}:{name} (yes or no): '):
+                        yes = True
+                else:
+                    print(f"No records found for {app}:{name}")
+            if yes:
+                deleted = helper.delete_migration(app, name)
 
-            print(f"Migration record {id_to_delete} deleted: {deleted}")
+                print(f"Migration record {app}:{name} deleted: {deleted}")
+            else:
+                print("Nothing done.")

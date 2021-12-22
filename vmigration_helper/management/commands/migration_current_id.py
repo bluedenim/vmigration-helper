@@ -3,6 +3,8 @@ from django.db import DEFAULT_DB_ALIAS, connections, OperationalError
 from django.db.migrations.recorder import MigrationRecorder
 from django.db.models import Max
 
+from vmigration_helper.helpers.migration_records import MigrationRecordsHelper
+
 
 class Command(BaseCommand):
     """
@@ -15,8 +17,8 @@ class Command(BaseCommand):
         Returns the current max ID of the migration records table (django_migrations). If there are no records,
         0 is returned.
         """
-        migration_recorder = MigrationRecorder(connection)
-        latest_migration_id = migration_recorder.migration_qs.aggregate(Max('id'))['id__max']
+        helper = MigrationRecordsHelper(MigrationRecorder(connection))
+        latest_migration_id = helper.get_migration_records_qs().aggregate(Max('id'))['id__max']
         return latest_migration_id or 0
 
     def handle(self, *args, **options):

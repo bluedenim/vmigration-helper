@@ -3,6 +3,8 @@ from django.db import DEFAULT_DB_ALIAS, connections, OperationalError
 from django.db.migrations.recorder import MigrationRecorder
 from django.db.models import QuerySet
 
+from vmigration_helper.helpers.migration_records import MigrationRecordsHelper
+
 FORMAT_CSV = 'csv'
 FORMAT_CONSOLE = 'console'
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S%z'
@@ -56,8 +58,8 @@ class Command(BaseCommand):
         try:
             connection = connections[DEFAULT_DB_ALIAS]
             connection.prepare_database()
-            recorder = MigrationRecorder(connection)
-            migrations_queryset = recorder.migration_qs.all()
+            helper = MigrationRecordsHelper(MigrationRecorder(connection))
+            migrations_queryset = helper.get_migration_records_qs().all()
 
             app_name_width = 0
             header = "ID,Applied,App,Name"

@@ -1,10 +1,11 @@
 import subprocess
-from typing import List, Optional
+from typing import List
 
 from django.core.management import BaseCommand
 from django.db import DEFAULT_DB_ALIAS, connections, OperationalError
 from django.db.migrations.recorder import MigrationRecorder
 
+from vmigration_helper.helpers.migration_records import MigrationRecordsHelper
 
 MIGRATE_COMMAND = 'python manage.py migrate {app} {name}'
 
@@ -34,50 +35,6 @@ class Command(BaseCommand):
         python manage.py migration_rollback 7 --dry-run --migrate-cmd "pipenv run python manage.py migrate {app} {name}"
 
     """
-
-    @staticmethod
-    def squash_migrations(migrations: List[MigrationRecorder.Migration]) -> List[MigrationRecorder.Migration]:
-        """
-        Find contiguous migrations for the same app and squash them by omitting all but the last entry. The incoming
-        list, therefore, must be ordered such that the last entry of a contiguous group is the one to keep (e.g.
-        in descending order when rolling back).
-
-        :param migrations: the migrations to squash
-
-        :returns: the squashed migrations
-        """
-        lowest_migrations = []  # type: List[MigrationRecorder.Migration]
-        curr_app = None
-        curr_migration = None
-        for migration in migrations:
-            if curr_app is None:
-                curr_app = migration.app
-                curr_migration = migration
-            else:
-                if curr_app == migration.app:
-                    curr_migration = migration
-                else:
-                    lowest_migrations.append(curr_migration)
-                    curr_app = migration.app
-                    curr_migration = migration
-        if curr_migration:
-            lowest_migrations.append(curr_migration)
-        return lowest_migrations
-
-    @staticmethod
-    def previous_migration(
-        migration_recorder: MigrationRecorder,
-        migration: MigrationRecorder.Migration
-    ) -> Optional[MigrationRecorder.Migration]:
-        """
-        Retrieve the previous migration record (based on the app and ID) from the DB if one exists.
-
-        :param migration_recorder: the MigrationRecorder instance to use to access migration records.
-        :param migration: the migration to retrieve the previous migration for.
-
-        :returns: the previous migration if one exists
-        """
-        return migration_recorder.migration_qs.filter(app=migration.app, id__lt=migration.id).order_by('-id').first()
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -110,13 +67,13 @@ class Command(BaseCommand):
         try:
             connection = connections[DEFAULT_DB_ALIAS]
             connection.prepare_database()
-            recorder = MigrationRecorder(connection)
-            qs = recorder.migration_qs.filter(id__gt=rollback_to_id).order_by('-id')
+            helper = MigrationRecordsHelper(MigrationRecorder(connection))
+            qs = helper.get_migration_records_qs().filter(id__gt=rollback_to_id).order_by('-id')
             migration_records = list(qs)  # type: List[MigrationRecorder.Migration]
-            squashed_migrations = self.squash_migrations(migration_records)
+            squashed_migrations = helper.squash_migrations(migration_records)
             targets = []
             for migration in squashed_migrations:
-                previous_migration = self.previous_migration(recorder, migration)
+                previous_migration = helper.previous_migration(migration)
                 if previous_migration:
                     targets.append((migration.app, previous_migration.name))
                 else:

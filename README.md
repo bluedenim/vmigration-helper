@@ -152,7 +152,7 @@ depend on the one being deleted.
 
 ```
 python manage.py migration_delete myapp 0003_some_migration
-Confirm deletion of auth:0009_alter_user_last_name_max_length (yes or no): yes
+Confirm deletion of myapp:0003_some_migration (yes or no): yes
 ```
 The command above deletes the migration `0003_some_migration` for the app `myapp` (after
 getting confirmation).

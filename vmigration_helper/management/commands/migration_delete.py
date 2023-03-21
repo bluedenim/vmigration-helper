@@ -1,5 +1,6 @@
 from django.core.management import BaseCommand
-from django.db import DEFAULT_DB_ALIAS, connections
+from django.conf import settings
+from django.db import connections
 from django.db.migrations.recorder import MigrationRecorder
 
 from vmigration_helper.helpers.migration_records import MigrationRecordsHelper
@@ -37,7 +38,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "connection-name",
             type=str,
-            default=DEFAULT_DB_ALIAS,
+            default=settings.DEFAULT_DB_ALIAS,
             help=("The connection name to use. If not provided, the default connection will be used."),
         )
 

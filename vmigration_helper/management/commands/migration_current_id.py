@@ -24,7 +24,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "connection-name",
+            "--connection-name",
             type=str,
             default=settings.DEFAULT_DB_ALIAS,
             help=("The connection name to use. If not provided, the default connection will be used."),

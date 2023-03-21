@@ -50,6 +50,7 @@ These are the records of migrations applied. The fields indicate:
   * App - name of the Django app
   * Name - name of the migration 
 
+  * `--connection-name <connection>` to use a different connection from `default`
 
 ### migration_current_id
 
@@ -61,6 +62,11 @@ Shows the ID of the latest migration record in your `django_migration` table.
 ```
 
 192 is the ID of the latest record as shown above.
+
+#### Optional parameters:
+
+  * `--connection-name <connection>` to use a different connection from `default`
+
 
 ### migration_rollback
 
@@ -139,6 +145,8 @@ Running migrations:
     pipenv run python manage.py migrate auth zero
     pipenv run python manage.py migrate contenttypes zero
     ```
+  * `--connection-name <connection>` to use a different connection from `default`
+
 
 ### migration_delete
 
@@ -166,6 +174,7 @@ python manage.py migration_delete myapp 0003_some_migration --yes
 #### Optional parameters:
 
   * `--yes` will proceed to deleting the record without asking for confirmation
+  * `--connection-name <connection>` to use a different connection from `default`
 
 
 ## Ideas for automation

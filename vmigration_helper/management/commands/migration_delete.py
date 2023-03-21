@@ -34,13 +34,21 @@ class Command(BaseCommand):
             )
         )
 
+        parser.add_argument(
+            "connection-name",
+            type=str,
+            default=DEFAULT_DB_ALIAS,
+            help=("The connection name to use. If not provided, the default connection will be used."),
+        )
+
     def handle(self, *args, **options):
         app = options['app']
         name = options['name']
         yes = options['yes']
+        connection_name = options["connection_name"]
 
         if app and name:
-            connection = connections[DEFAULT_DB_ALIAS]
+            connection = connections[connection_name]
             connection.prepare_database()
             helper = MigrationRecordsHelper(MigrationRecorder(connection))
 

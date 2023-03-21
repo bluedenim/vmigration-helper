@@ -59,13 +59,22 @@ class Command(BaseCommand):
             help=f'The migration command template (accepts {{app}} and {{name}}). Default is: "{MIGRATE_COMMAND}"'
         )
 
+        parser.add_argument(
+            "connection-name",
+            type=str,
+            default=DEFAULT_DB_ALIAS,
+            help=("The connection name to use. If not provided, the default connection will be used."),
+        )
+
+
     def handle(self, *args, **options):
         rollback_to_id = options['to_id']
         dry_run = options['dry_run']
         migrate_cmd = options['migrate_cmd']
+        connection_name = options['connection_name']
 
         try:
-            connection = connections[DEFAULT_DB_ALIAS]
+            connection = connections[connection_name]
             connection.prepare_database()
             helper = MigrationRecordsHelper(MigrationRecorder(connection))
             qs = helper.get_migration_records_qs().filter(id__gt=rollback_to_id).order_by('-id')

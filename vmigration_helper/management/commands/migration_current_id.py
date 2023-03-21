@@ -21,9 +21,19 @@ class Command(BaseCommand):
         latest_migration_id = helper.get_migration_records_qs().aggregate(Max('id'))['id__max']
         return latest_migration_id or 0
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "connection-name",
+            type=str,
+            default=DEFAULT_DB_ALIAS,
+            help=("The connection name to use. If not provided, the default connection will be used."),
+        )
+
     def handle(self, *args, **options):
+        connection_name = options["connection_name"]
+
         try:
-            connection = connections[DEFAULT_DB_ALIAS]
+            connection = connections[connection_name]
             connection.prepare_database()
             print(self.create_snapshot_name(connection))
         except OperationalError as e:

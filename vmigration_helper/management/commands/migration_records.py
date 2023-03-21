@@ -52,11 +52,18 @@ class Command(BaseCommand):
             help=f'The format to display the migration records (csv or console). Default is: "{FORMAT_CONSOLE}"'
         )
 
+        parser.add_argument(
+            "connection-name",
+            type=str,
+            default=DEFAULT_DB_ALIAS,
+            help=("The connection name to use. If not provided, the default connection will be used."),
+        )
+
     def handle(self, *args, **options):
-        print_format = options['format']
+        connection_name = options["connection_name"]
 
         try:
-            connection = connections[DEFAULT_DB_ALIAS]
+            connection = connections[connection_name]
             connection.prepare_database()
             helper = MigrationRecordsHelper(MigrationRecorder(connection))
             migrations_queryset = helper.get_migration_records_qs().all()

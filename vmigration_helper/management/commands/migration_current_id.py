@@ -1,12 +1,12 @@
-from django.core.management import BaseCommand
-from django.db import DEFAULT_DB_ALIAS, connections, OperationalError
+from django.db import connections, OperationalError
 from django.db.migrations.recorder import MigrationRecorder
 from django.db.models import Max
 
+from vmigration_helper.helpers.command import MigrationCommand
 from vmigration_helper.helpers.migration_records import MigrationRecordsHelper
 
 
-class Command(BaseCommand):
+class Command(MigrationCommand):
     """
     Displays the ID of the last entry in the migration records (from the ``django_migrations`` table).
     """
@@ -23,7 +23,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
-            connection = connections[DEFAULT_DB_ALIAS]
+            connection_name = options["connection_name"]
+            connection = connections[connection_name]
             connection.prepare_database()
             print(self.create_snapshot_name(connection))
         except OperationalError as e:

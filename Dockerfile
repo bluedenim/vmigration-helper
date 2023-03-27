@@ -1,9 +1,9 @@
-FROM python:3
+FROM python:3.9
 
 WORKDIR /code
 
 RUN pip install --upgrade pip
 
 # Install and setup Poetry
-RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
-RUN echo export PATH=\$PATH:\$HOME/.poetry/bin >> /root/.bashrc
+RUN curl -sSL https://install.python-poetry.org | python3 -
+RUN echo export PATH=\$PATH:\$HOME/.local/bin >> /root/.bashrc

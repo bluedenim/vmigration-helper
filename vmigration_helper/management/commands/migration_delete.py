@@ -1,11 +1,11 @@
-from django.core.management import BaseCommand
-from django.db import DEFAULT_DB_ALIAS, connections
+from django.db import connections
 from django.db.migrations.recorder import MigrationRecorder
 
+from vmigration_helper.helpers.command import MigrationCommand
 from vmigration_helper.helpers.migration_records import MigrationRecordsHelper
 
 
-class Command(BaseCommand):
+class Command(MigrationCommand):
     """
     Deletes a migration record from django_migrations. This operation is a low-level operation and
     should be used only as a last resort when a migration cannot be rolled back, and deleting a record that is a
@@ -14,6 +14,7 @@ class Command(BaseCommand):
     """
 
     def add_arguments(self, parser):
+        super().add_arguments(parser)
         parser.add_argument(
             'app',
             help=(
@@ -38,9 +39,9 @@ class Command(BaseCommand):
         app = options['app']
         name = options['name']
         yes = options['yes']
-
+        connection_name = options['connection_name']
         if app and name:
-            connection = connections[DEFAULT_DB_ALIAS]
+            connection = connections[connection_name]
             connection.prepare_database()
             helper = MigrationRecordsHelper(MigrationRecorder(connection))
 

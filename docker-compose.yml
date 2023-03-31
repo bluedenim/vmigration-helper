@@ -22,6 +22,7 @@ version: "3.9"
 
 # To Publish:
 #   docker-compose run --rm buildenv /bin/bash
+#   poetry config http-basic.pypi vancly <password>
 #   poetry publish
 
 services:

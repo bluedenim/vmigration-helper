@@ -1,9 +1,8 @@
-from django.db import connections, OperationalError
+from django.db import OperationalError
 from django.db.migrations.recorder import MigrationRecorder
 from django.db.models import QuerySet
 
 from vmigration_helper.helpers.command import MigrationCommand
-from vmigration_helper.helpers.migration_records import MigrationRecordsHelper
 
 FORMAT_CSV = 'csv'
 FORMAT_CONSOLE = 'console'
@@ -55,11 +54,8 @@ class Command(MigrationCommand):
 
     def handle(self, *args, **options):
         print_format = options['format']
-        connection_name = options['connection_name']
         try:
-            connection = connections[connection_name]
-            connection.prepare_database()
-            helper = MigrationRecordsHelper(MigrationRecorder(connection))
+            helper = self.create_migration_helper()
             migrations_queryset = helper.get_migration_records_qs().all()
 
             app_name_width = 0

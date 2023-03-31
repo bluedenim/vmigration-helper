@@ -1,12 +1,10 @@
 import subprocess
 from typing import List
 
-from django.core.management import BaseCommand
-from django.db import connections, OperationalError
+from django.db import OperationalError
 from django.db.migrations.recorder import MigrationRecorder
 
 from vmigration_helper.helpers.command import MigrationCommand
-from vmigration_helper.helpers.migration_records import MigrationRecordsHelper
 
 MIGRATE_COMMAND = 'python manage.py migrate {app} {name}'
 
@@ -65,12 +63,9 @@ class Command(MigrationCommand):
         rollback_to_id = options['to_id']
         dry_run = options['dry_run']
         migrate_cmd = options['migrate_cmd']
-        connection_name = options['connection_name']
 
         try:
-            connection = connections[connection_name]
-            connection.prepare_database()
-            helper = MigrationRecordsHelper(MigrationRecorder(connection))
+            helper = self.create_migration_helper()
             qs = helper.get_migration_records_qs().filter(id__gt=rollback_to_id).order_by('-id')
             migration_records = list(qs)  # type: List[MigrationRecorder.Migration]
             squashed_migrations = helper.squash_migrations(migration_records)

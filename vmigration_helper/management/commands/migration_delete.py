@@ -1,8 +1,4 @@
-from django.db import connections
-from django.db.migrations.recorder import MigrationRecorder
-
 from vmigration_helper.helpers.command import MigrationCommand
-from vmigration_helper.helpers.migration_records import MigrationRecordsHelper
 
 
 class Command(MigrationCommand):
@@ -39,11 +35,8 @@ class Command(MigrationCommand):
         app = options['app']
         name = options['name']
         yes = options['yes']
-        connection_name = options['connection_name']
         if app and name:
-            connection = connections[connection_name]
-            connection.prepare_database()
-            helper = MigrationRecordsHelper(MigrationRecorder(connection))
+            helper = self.create_migration_helper()
 
             if not yes:
                 record = helper.get_migration_records_qs().filter(app=app, name=name)

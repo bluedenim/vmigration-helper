@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from django.db import DEFAULT_DB_ALIAS, connections
+from django.db import connections, DEFAULT_DB_ALIAS
 from django.db.migrations.recorder import MigrationRecorder
 from django.db.models import QuerySet
 

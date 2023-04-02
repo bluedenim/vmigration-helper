@@ -20,7 +20,7 @@ class MigrationCommand(BaseCommand, ABC):
         parser.add_argument(
             '--connection-name',
             default=DEFAULT_DB_ALIAS,
-            help=f'The connection to use for migration commands. Defaults to settings.DEFAULT_DB_ALIAS'
+            help=f'The connection to use for migration commands. Defaults to django.db.DEFAULT_DB_ALIAS'
         )
 
     def execute(self, *args, **options):

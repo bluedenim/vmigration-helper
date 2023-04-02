@@ -27,10 +27,6 @@ Django commands to help with running Django migrations.
 
 Shows existing migration records in your `django_migration` table.
 
-#### Optional parameters:
-
-  * `--format (console | csv)` print the info in CSV or friendlier console format (default)
-
 ```
 > python manage.py migration_records --format csv
 ID,Applied,App,Name
@@ -50,6 +46,10 @@ These are the records of migrations applied. The fields indicate:
   * App - name of the Django app
   * Name - name of the migration 
 
+#### Optional parameters:
+
+  * `--format (console | csv)` print the info in CSV or friendlier console format (default)
+  * `--connection-name {connection}` the connection name to use (default is `django.db.DEFAULT_DB_ALIAS`)
 
 ### migration_current_id
 
@@ -61,6 +61,10 @@ Shows the ID of the latest migration record in your `django_migration` table.
 ```
 
 192 is the ID of the latest record as shown above.
+
+#### Optional parameters:
+
+  * `--connection-name {connection}` the connection name to use (default is `django.db.DEFAULT_DB_ALIAS`)
 
 ### migration_rollback
 
@@ -116,6 +120,7 @@ Running migrations:
 
 #### Optional parameters:
 
+  * `--connection-name {connection}` the connection name to use (default is `django.db.DEFAULT_DB_ALIAS`)
   * `--dry-run` will print the commands but will not actually run them
   * `--migrate-cmd <command to run migrations>` sets the command to run migrations with. The command must accept 
     the app and migration name as the `{app}` and `{name}` placeholders, respectively.  
@@ -162,9 +167,8 @@ To delete without confirmation, use the `--yes` option:
 python manage.py migration_delete myapp 0003_some_migration --yes
 ```
 
-
 #### Optional parameters:
-
+  * `--connection-name {connection}` the connection name to use (default is `django.db.DEFAULT_DB_ALIAS`)
   * `--yes` will proceed to deleting the record without asking for confirmation
 
 

@@ -1,31 +1,26 @@
-from django.core.management import BaseCommand
-from django.db import DEFAULT_DB_ALIAS, connections, OperationalError
-from django.db.migrations.recorder import MigrationRecorder
+from django.db import OperationalError
 from django.db.models import Max
 
-from vmigration_helper.helpers.migration_records import MigrationRecordsHelper
+from vmigration_helper.helpers.command import MigrationCommand
 
 
-class Command(BaseCommand):
+class Command(MigrationCommand):
     """
     Displays the ID of the last entry in the migration records (from the ``django_migrations`` table).
     """
 
-    @staticmethod
-    def create_snapshot_name(connection) -> int:
+    def create_snapshot_name(self) -> int:
         """
         Returns the current max ID of the migration records table (django_migrations). If there are no records,
         0 is returned.
         """
-        helper = MigrationRecordsHelper(MigrationRecorder(connection))
+        helper = self.create_migration_helper()
         latest_migration_id = helper.get_migration_records_qs().aggregate(Max('id'))['id__max']
         return latest_migration_id or 0
 
     def handle(self, *args, **options):
         try:
-            connection = connections[DEFAULT_DB_ALIAS]
-            connection.prepare_database()
-            print(self.create_snapshot_name(connection))
+            print(self.create_snapshot_name())
         except OperationalError as e:
             print(f'DB ERROR: {e}')
             exit(1)

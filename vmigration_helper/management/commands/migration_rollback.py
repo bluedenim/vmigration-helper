@@ -1,16 +1,15 @@
 import subprocess
 from typing import List
 
-from django.core.management import BaseCommand
-from django.db import DEFAULT_DB_ALIAS, connections, OperationalError
+from django.db import OperationalError
 from django.db.migrations.recorder import MigrationRecorder
 
-from vmigration_helper.helpers.migration_records import MigrationRecordsHelper
+from vmigration_helper.helpers.command import MigrationCommand
 
 MIGRATE_COMMAND = 'python manage.py migrate {app} {name}'
 
 
-class Command(BaseCommand):
+class Command(MigrationCommand):
     """
     Rolls back migrations by unapplying entries in the migration records (django_migrations) whose IDs are greater
     than the ID provided.
@@ -37,6 +36,7 @@ class Command(BaseCommand):
     """
 
     def add_arguments(self, parser):
+        super().add_arguments(parser)
         parser.add_argument(
             'to_id',
             type=int,
@@ -65,9 +65,7 @@ class Command(BaseCommand):
         migrate_cmd = options['migrate_cmd']
 
         try:
-            connection = connections[DEFAULT_DB_ALIAS]
-            connection.prepare_database()
-            helper = MigrationRecordsHelper(MigrationRecorder(connection))
+            helper = self.create_migration_helper()
             qs = helper.get_migration_records_qs().filter(id__gt=rollback_to_id).order_by('-id')
             migration_records = list(qs)  # type: List[MigrationRecorder.Migration]
             squashed_migrations = helper.squash_migrations(migration_records)

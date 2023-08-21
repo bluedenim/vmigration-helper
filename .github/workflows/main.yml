@@ -19,19 +19,30 @@ jobs:
         run: poetry install
       - name: Build
         run: poetry build
-
+      - name: Upload dists
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts
+          path: ./dist/
+          retention-days: 2
+          if-no-files-found: error
   publish:
     name: Test publishing to test.pypi.org
     runs-on: ubuntu-latest
     if: startsWith(github.event.ref, 'refs/tags/v')
     needs:
       - build
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/project/vmigration-helper/
     steps:
-      - uses: actions/download-artifact@v3
+      - name: Download dists
+        uses: actions/download-artifact@v3
         with:
-          name: artifact
+          name: python-package-distributions
           path: ./dist/
-      - uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Publish
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
           user: __token__

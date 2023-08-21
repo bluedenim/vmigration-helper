@@ -23,7 +23,7 @@ jobs:
   publish:
     name: Test publishing to test.pypi.org
     runs-on: ubuntu-latest
-    if: startsWith(github.event.ref, 'refs/tags/tv')
+    if: startsWith(github.event.ref, 'refs/tags/v')
     needs:
       - build
     steps:

@@ -11,6 +11,11 @@ class MigrationRecordsHelper:
     """
 
     def __init__(self, migration_recorder: Optional[MigrationRecorder] = None) -> None:
+        """
+
+        :param migration_recorder: the MigrationRecorder instance to use to access migration records.
+        """
+
         if not migration_recorder:
             connection = connections[DEFAULT_DB_ALIAS]
             connection.prepare_database()
@@ -22,10 +27,7 @@ class MigrationRecordsHelper:
         """
         Gets a QuerySet from which MigrationRecorder.Migration records can be acquired.
 
-        Args:
-            migration_recorder - instance of MigrationRecorder used to get migration records
-        Returns:
-            query set to use to get migration records
+        :returns: query set to use to get migration records
         """
         return self.migration_recorder.migration_qs
 
@@ -33,7 +35,6 @@ class MigrationRecordsHelper:
         """
         Retrieve the previous migration record (based on the app and ID) from the DB if one exists.
 
-        :param migration_recorder: the MigrationRecorder instance to use to access migration records.
         :param migration: the migration to retrieve the previous migration for.
 
         :returns: the previous migration if one exists

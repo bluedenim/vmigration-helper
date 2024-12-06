@@ -11,6 +11,9 @@ class MigrationRecordsHelper:
     """
 
     def __init__(self, migration_recorder: Optional[MigrationRecorder] = None) -> None:
+        """
+        :param migration_recorder: instance of MigrationRecorder used to get migration records
+        """
         if not migration_recorder:
             connection = connections[DEFAULT_DB_ALIAS]
             connection.prepare_database()
@@ -22,8 +25,6 @@ class MigrationRecordsHelper:
         """
         Gets a QuerySet from which MigrationRecorder.Migration records can be acquired.
 
-        Args:
-            migration_recorder - instance of MigrationRecorder used to get migration records
         Returns:
             query set to use to get migration records
         """
@@ -33,7 +34,6 @@ class MigrationRecordsHelper:
         """
         Retrieve the previous migration record (based on the app and ID) from the DB if one exists.
 
-        :param migration_recorder: the MigrationRecorder instance to use to access migration records.
         :param migration: the migration to retrieve the previous migration for.
 
         :returns: the previous migration if one exists
@@ -45,6 +45,9 @@ class MigrationRecordsHelper:
     def delete_migration(self, app: str, name: str) -> bool:
         """
         Delete the migration matching the app and name given.
+
+        :param app: the name of the Django app for the migration
+        :param name: the name of the migration
 
         :returns: True if a record was deleted
         """
@@ -77,12 +80,14 @@ class MigrationRecordsHelper:
         curr_migration = None
         for migration in migrations:
             if curr_app is None:
+                # First run: initialize the app and migration
                 curr_app = migration.app
                 curr_migration = migration
             else:
                 if curr_app == migration.app:
                     curr_migration = migration
                 else:
+                    # App has changed. Store the current migration as the lowest and reset for the new app.
                     lowest_migrations.append(curr_migration)
                     curr_app = migration.app
                     curr_migration = migration

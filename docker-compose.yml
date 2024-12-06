@@ -1,5 +1,3 @@
-version: "3.9"
-
 # To build image and initialize container for subsequent tasks:
 #   docker-compose build --no-cache
 #   docker-compose run --rm buildenv /bin/bash
@@ -17,14 +15,14 @@ version: "3.9"
 # To Publish (test pypi):
 #   docker-compose run --rm buildenv /bin/bash
 #   poetry config repositories.testpypi https://test.pypi.org/legacy/
-#   poetry config http-basic.testpypi vancly
-#     enter password when prompted
+#   poetry config http-basic.testpypi __token__
+#     enter API token when prompted
 #   poetry publish -r testpypi
 
 # To Publish:
 #   docker-compose run --rm buildenv /bin/bash
-#   poetry config http-basic.pypi vancly
-#     enter password when prompted
+#   poetry config http-basic.pypi __token__
+#     enter API token when prompted
 #   poetry publish
 
 services:

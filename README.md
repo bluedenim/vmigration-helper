@@ -28,20 +28,52 @@ Django commands to help with running Django migrations.
 Shows existing migration records in your `django_migration` table.
 
 ```
+> python manage.py migration_records
+    ID Applied                           App Name
+     1 2024-12-06T18:15:03+0000 contenttypes 0001_initial
+     2 2024-12-06T18:15:03+0000         auth 0001_initial
+     3 2024-12-06T18:15:03+0000        admin 0001_initial
+     4 2024-12-06T18:15:03+0000        admin 0002_logentry_remove_auto_add
+     5 2024-12-06T18:15:03+0000        admin 0003_logentry_add_action_flag_choices
+     6 2024-12-06T18:15:03+0000 contenttypes 0002_remove_content_type_name
+     7 2024-12-06T18:15:03+0000         auth 0002_alter_permission_name_max_length
+     8 2024-12-06T18:15:03+0000         auth 0003_alter_user_email_max_length
+     9 2024-12-06T18:15:03+0000         auth 0004_alter_user_username_opts
+    10 2024-12-06T18:15:03+0000         auth 0005_alter_user_last_login_null
+    11 2024-12-06T18:15:03+0000         auth 0006_require_contenttypes_0002
+    12 2024-12-06T18:15:03+0000         auth 0007_alter_validators_add_error_messages
+    13 2024-12-06T18:15:03+0000         auth 0008_alter_user_username_max_length
+    14 2024-12-06T18:15:03+0000         auth 0009_alter_user_last_name_max_length
+    15 2024-12-06T18:15:03+0000         auth 0010_alter_group_name_max_length
+    16 2024-12-06T18:15:03+0000         auth 0011_update_proxy_permissions
+    17 2024-12-06T18:15:03+0000         auth 0012_alter_user_first_name_max_length
+    18 2024-12-06T18:15:03+0000     sessions 0001_initial
+
 > python manage.py migration_records --format csv
 ID,Applied,App,Name
-175,2021-06-13T20:41:28.683900+00:00,contenttypes,0001_initial
-176,2021-06-13T20:41:28.717886+00:00,auth,0001_initial
-177,2021-06-13T20:41:28.742930+00:00,admin,0001_initial
-178,2021-06-13T20:41:28.761938+00:00,admin,0002_logentry_remove_auto_add
-179,2021-06-13T20:41:28.770319+00:00,admin,0003_logentry_add_action_flag_choices
-180,2021-06-13T20:41:28.791287+00:00,contenttypes,0002_remove_content_type_name
-...
-192,2021-06-13T20:41:28.991814+00:00,sessions,0001_initial
+1,2024-12-06T18:15:03+0000,contenttypes,0001_initial
+2,2024-12-06T18:15:03+0000,auth,0001_initial
+3,2024-12-06T18:15:03+0000,admin,0001_initial
+4,2024-12-06T18:15:03+0000,admin,0002_logentry_remove_auto_add
+5,2024-12-06T18:15:03+0000,admin,0003_logentry_add_action_flag_choices
+6,2024-12-06T18:15:03+0000,contenttypes,0002_remove_content_type_name
+7,2024-12-06T18:15:03+0000,auth,0002_alter_permission_name_max_length
+8,2024-12-06T18:15:03+0000,auth,0003_alter_user_email_max_length
+9,2024-12-06T18:15:03+0000,auth,0004_alter_user_username_opts
+10,2024-12-06T18:15:03+0000,auth,0005_alter_user_last_login_null
+11,2024-12-06T18:15:03+0000,auth,0006_require_contenttypes_0002
+12,2024-12-06T18:15:03+0000,auth,0007_alter_validators_add_error_messages
+13,2024-12-06T18:15:03+0000,auth,0008_alter_user_username_max_length
+14,2024-12-06T18:15:03+0000,auth,0009_alter_user_last_name_max_length
+15,2024-12-06T18:15:03+0000,auth,0010_alter_group_name_max_length
+16,2024-12-06T18:15:03+0000,auth,0011_update_proxy_permissions
+17,2024-12-06T18:15:03+0000,auth,0012_alter_user_first_name_max_length
+18,2024-12-06T18:15:03+0000,sessions,0001_initial
 ```
 
+
 These are the records of migrations applied. The fields indicate:
-  * ID - the ID of the record
+  * ID - the ID of the migration record
   * Applied - when the migration was applied 
   * App - name of the Django app
   * Name - name of the migration 

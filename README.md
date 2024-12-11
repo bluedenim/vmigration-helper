@@ -106,8 +106,14 @@ Roll-back (unapply) previously applied migrations _after_ (but not including) th
 > python manage.py migration_rollback 2
 ```
 
-The above will rollback migrations after `0001_initial` of the `auth` app (ID 2):
+The above will rollback migrations after `0001_initial` of the `auth` app (ID 2). The helper will 
+figure out and run the intermediate rollbacks for different Django apps (e.g. `sessions`, `auth`, `contenttypes`) 
+to get us back to ID 2.
 
+It will use the existing migration command (e.g. `python manage.py migrate ...`) for compatibility. There is no
+"clever" rewrite of anything.
+
+Here's what it runs:
 ```
 python manage.py migrate sessions zero
 Operations to perform:

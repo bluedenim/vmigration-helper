@@ -89,10 +89,10 @@ Shows the ID of the latest migration record in your `django_migration` table.
 
 ```
 > python manage.py migration_current_id
-192
+18
 ```
 
-192 is the ID of the latest record as shown above.
+18 is the ID of the latest record as shown above.
 
 #### Optional parameters:
 
@@ -103,10 +103,10 @@ Shows the ID of the latest migration record in your `django_migration` table.
 Roll-back (unapply) previously applied migrations _after_ (but not including) the migration ID provided.
 
 ```
-> python manage.py migration_rollback 176
+> python manage.py migration_rollback 2
 ```
 
-The above will rollback migrations after `0001_initial` of the `auth` app:
+The above will rollback migrations after `0001_initial` of the `auth` app (ID 2):
 
 ```
 python manage.py migrate sessions zero
@@ -139,15 +139,14 @@ Operations to perform:
 Running migrations:
   Rendering model states... DONE
   Unapplying contenttypes.0002_remove_content_type_name... OK
+```
 
-python manage.py migrate admin zero
-Operations to perform:
-  Unapply all migrations: admin
-Running migrations:
-  Rendering model states... DONE
-  Unapplying admin.0003_logentry_add_action_flag_choices... OK
-  Unapplying admin.0002_logentry_remove_auto_add... OK
-  Unapplying admin.0001_initial... OK
+Now, the migration state is where the latest migration record is ID 2:
+```
+> python manage.py migration_records
+    ID Applied                           App Name
+     1 2024-12-06T18:15:03+0000 contenttypes 0001_initial
+     2 2024-12-06T18:15:03+0000         auth 0001_initial
 ```
 
 #### Optional parameters:

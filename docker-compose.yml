@@ -1,32 +1,5 @@
-# To build image and initialize container for subsequent tasks:
-#   docker-compose build --no-cache
-#   docker-compose run --rm buildenv /bin/bash
-#   poetry install
-#   poetry run python manage.py migrate
-
-
-# To access shell:
-#   docker-compose run --rm buildenv /bin/bash
-
-# To build:
-#   docker-compose run --rm buildenv /bin/bash
-#   poetry build
-
-# To Publish (test pypi):
-#   docker-compose run --rm buildenv /bin/bash
-#   poetry config repositories.testpypi https://test.pypi.org/legacy/
-#   poetry config http-basic.testpypi __token__
-#     enter API token when prompted
-#   poetry publish -r testpypi
-
-# To Publish:
-#   docker-compose run --rm buildenv /bin/bash
-#   poetry config http-basic.pypi __token__
-#     enter API token when prompted
-#   poetry publish
-
 services:
-  buildenv:
+  app:
     build: .
     volumes:
       - .:/code

@@ -8,17 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
-      - name: Upgrade pip
-        run: pip install --upgrade pip
-      - name: Install poetry
-        run: curl -sSL https://install.python-poetry.org | python3 -
-      - name: Install prereqs
-        run: poetry install
-      - name: Build
-        run: poetry build
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Build wheel and sdist
+        run: uv build
+
       - name: Upload dists
         uses: actions/upload-artifact@v4
         with:
@@ -26,9 +22,13 @@ jobs:
           path: ./dist/
           retention-days: 2
           if-no-files-found: error
+
   publish:
+    # NOTE that this will not publish to the production PyPI. It will only publish to the test PyPI.
     name: Test publishing to test.pypi.org
     runs-on: ubuntu-latest
+
+    # Only publish when a tag starting with "v" is pushed, e.g., "v1.0.0"
     if: startsWith(github.event.ref, 'refs/tags/v')
     needs:
       - build
@@ -37,12 +37,13 @@ jobs:
       url: https://test.pypi.org/project/vmigration-helper/
     steps:
       - name: Download dists
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: vmigration-helper-artifacts
           path: ./dist/
+
       - name: Publish
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@v1
         with:
           user: __token__
           password: ${{ secrets.TESTPYPI_API_TOKEN }}

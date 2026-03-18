@@ -45,6 +45,16 @@ tar tvzf dist/vmigration_helper-<version>.tar.gz
 
 You will need credentials (API Token) for this. Set one up in https://test.pypi.org/ as needed.
 
+#### Publish from GitHub Action
+A publish to **TestPyPI** can also be done by pushing a tag up to a PR:
+- Create a `vX.Y.Z` tag (dev versions are OK e.g. `vX.Y.Z.devN`) on the PR branch.
+- Push it up. Example:
+  ```
+  git tag v1.2.0.dev0
+  git push origin v1.2.0.dev0
+  ```
+
+
 ### PyPI
 - Double-check **version** in `pyproject.toml`. Rebuild if necessary (see above).
 - Run:

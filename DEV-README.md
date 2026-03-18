@@ -63,3 +63,13 @@ A publish to **TestPyPI** can also be done by pushing a tag up to a PR:
     ```
 
 You will need credentials (API Token) for this. Set one up in https://pypi.org/ as needed.
+
+#### Publish from GitHub Release
+- Do whatever it takes to get production-quality changes into the branch `master`.
+- Make sure `pyproject.toml`'s version is set to a valid semantic version (e.g. `X.Y.Z`).
+  - Test using `.devN` release as needed.
+  - Use manual publishes as described above for testing.
+- Create a [Release](https://github.com/bluedenim/vmigration-helper/releases) using GitHub UI.
+  - Use a tag of the format `vX.Y.Z`
+  - Set it as latest release.
+- Monitor status under the [Deployments](https://github.com/bluedenim/vmigration-helper/deployments).

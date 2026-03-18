@@ -1,22 +1,33 @@
-[tool.poetry]
+[project]
 name = "vmigration-helper"
-version = "0.3.0"
-homepage = "https://github.com/bluedenim/vmigration-helper"
-description = "Van's Django Migration Helper"
-authors = ["bluedenim <vancly@hotmail.com>"]
-readme = "README.md"
-packages = [
-    { include = "vmigration_helper" },
+version = "1.2.0.dev0"
+authors = [
+  {name = "Van Ly", email = "vancly@hotmail.com"},
 ]
-exclude = ["main"]
-keywords = ["django","migration","rollback"]
-
-[tool.poetry.dependencies]
-python = ">=3.8,<4.0"
-Django = ">=1.11.17,<5"
-
-[tool.poetry.dev-dependencies]
+description = "Van's Django Migration Helper"
+keywords = ["django", "db", "migration"]
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "django~=4.2",
+]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build>=0.10.9,<0.11.0"]
+build-backend = "uv_build"
+
+[project.urls]
+Homepage = "https://www.therealvan.com"
+Repository = "https://github.com/bluedenim/vmigration-helper"
+
+[[tool.uv.index]]
+name = "testpypi"
+url = "https://test.pypi.org/simple/"
+publish-url = "https://test.pypi.org/legacy/"
+explicit = true
+
+[tool.uv.build-backend]
+module-name = "vmigration_helper"
+module-root = ""
+source-exclude = ["tests.py", "tests"]
+wheel-exclude = ["tests.py", "tests"]

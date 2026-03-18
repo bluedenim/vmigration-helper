@@ -40,7 +40,7 @@ tar tvzf dist/vmigration_helper-<version>.tar.gz
     ```
 - Run:
     ```
-    docker compose run --rm app uv publish --index testpypi --user __token__ --password {API token}
+    docker compose run --rm app uv publish --index testpypi --username __token__ --password {API token}
     ```
 
 You will need credentials (API Token) for this. Set one up in https://test.pypi.org/ as needed.
@@ -59,7 +59,7 @@ A publish to **TestPyPI** can also be done by pushing a tag up to a PR:
 - Double-check **version** in `pyproject.toml`. Rebuild if necessary (see above).
 - Run:
     ```
-    docker compose run --rm app uv publish --user __token__ --password {API token}
+    docker compose run --rm app uv publish --username __token__ --password {API token}
     ```
 
 You will need credentials (API Token) for this. Set one up in https://pypi.org/ as needed.
